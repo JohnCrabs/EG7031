@@ -2,6 +2,8 @@ import json
 import yaml
 import csv
 from dotmap import DotMap
+import os
+from pathlib import Path
 
 
 # ***************************************************************** #
@@ -98,3 +100,84 @@ def write_CSV(o_path: str, values):
         else:
             writer = csv.writer(f)
             writer.writerows(records)
+
+
+# ***************************************************************** #
+# Path Edit
+# ***************************************************************** #
+def normpath(path: str):
+    if path:
+        return os.path.normpath(path)
+
+
+def home():
+    return Path.home()
+
+
+def desktop():
+    return normpath(f"{home()}/Desktop")
+
+
+def downloads():
+    return normpath(f"{home()}/Downloads")
+
+
+def documents():
+    return normpath(f"{home()}/Documents")
+
+
+def pictures():
+    return normpath(f"{home()}/Pictures")
+
+
+def music():
+    return normpath(f"{home()}/Music")
+
+
+def videos():
+    return normpath(f"{home()}/Videos")
+
+
+def p_root():
+    return normpath(f"{os.path.abspath(__file__)}/../../../../")
+
+
+def parent(path: str, b_Dir=False):
+    if path and Path(path).is_file():
+        return normpath(f"{path}/../")
+    if path and b_Dir:
+        return normpath(f"{path}/../")
+    return normpath(path)
+
+
+def basename(path: str, b_Suffix=True):
+    if path:
+        fp = os.path.basename(path)
+        if not b_Suffix:
+            return fp.split(".")[0]
+        return fp
+
+
+def suffix(path: str):
+    if path:
+        breakPath = os.path.basename(path).split(".")[1:]
+        tempSuffix = ""
+        for __s__ in breakPath:
+            tempSuffix += f".{__s__}"
+        return tempSuffix
+
+
+if __name__ == "__main__":
+    print(home())
+    print(desktop())
+    print(downloads())
+    print(documents())
+    print(pictures())
+    print(music())
+    print(videos())
+    print(p_root())
+    print(parent(__file__))
+    print(parent(parent(__file__), b_Dir=True))
+    print(basename(__file__, False))
+    print(suffix("path/AwesomeFile.SAFE.zip"))
+
